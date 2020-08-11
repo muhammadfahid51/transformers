@@ -23,8 +23,17 @@ using a masked language modeling (MLM) loss. XLNet is fine-tuned using a permuta
 import logging
 import math
 import os
+import torch
+
+
 from dataclasses import dataclass, field
 from typing import Optional
+from pathlib import Path
+
+from torch.utils.data import Dataset
+from tokenizers import ByteLevelBPETokenizer
+from tokenizers.processors import BertProcessing
+
 
 from transformers import (
     CONFIG_MAPPING,
@@ -125,14 +134,37 @@ class DataTrainingArguments:
     )
 
 
-def get_dataset(args: DataTrainingArguments, tokenizer: PreTrainedTokenizer, evaluate=False):
-    file_path = args.eval_data_file if evaluate else args.train_data_file
-    if args.line_by_line:
-        return LineByLineTextDataset(tokenizer=tokenizer, file_path=file_path, block_size=args.block_size)
-    else:
-        return TextDataset(
-            tokenizer=tokenizer, file_path=file_path, block_size=args.block_size, overwrite_cache=args.overwrite_cache
+class UrduDataset(Dataset):
+    def __init__(self, evaluate=False):
+        tokenizer = ByteLevelBPETokenizer(
+            "u_roberta/vocab.json",
+            "u_roberta/merges.txt"
         )
+
+        tokenizer._tokenizer.post_processor = BertProcessing(
+            ("</s>", tokenizer.token_to_id("</s>")),
+            ("<s>", tokenizer.token_to_id("<s>")),
+        )
+        tokenizer.enable_truncation(max_length=512)
+
+        self.examples = []
+
+        # src_files = Path(".").glob("*.txt")
+        src_files = Path("/home/ikram/workplace/datasets/sentences/").glob("*.txt")
+        for src_file in src_files:
+            print("🔥", src_file)
+            lines = src_file.read_text(encoding="utf-8").splitlines()
+            self.examples += [x.ids for x in tokenizer.encode_batch(lines)]
+
+    def __len__(self):
+        return len(self.examples)
+
+    def __getitem__(self, i):
+        return torch.tensor(self.examples[i])
+
+
+def get_dataset():
+    return UrduDataset()
 
 
 def main():
@@ -229,8 +261,8 @@ def main():
 
     # Get datasets
 
-    train_dataset = get_dataset(data_args, tokenizer=tokenizer) if training_args.do_train else None
-    eval_dataset = get_dataset(data_args, tokenizer=tokenizer, evaluate=True) if training_args.do_eval else None
+    train_dataset = get_dataset() if training_args.do_train else None
+    eval_dataset = get_dataset() if training_args.do_eval else None
     if config.model_type == "xlnet":
         data_collator = DataCollatorForPermutationLanguageModeling(
             tokenizer=tokenizer, plm_probability=data_args.plm_probability, max_span_length=data_args.max_span_length,
