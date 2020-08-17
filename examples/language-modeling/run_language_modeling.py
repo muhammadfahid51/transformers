@@ -135,7 +135,7 @@ class DataTrainingArguments:
 
 
 class UrduDataset(Dataset):
-    def __init__(self, evaluate=False):
+    def __init__(self):
         tokenizer = ByteLevelBPETokenizer(
             "UrduRoberta/vocab.json",
             "UrduRoberta/merges.txt"
