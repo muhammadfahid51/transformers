@@ -10,7 +10,7 @@ parser.add_argument('-t', '--text', type=str, required=True)
 args = parser.parse_args()
 
 
-fill_mask = pipeline("fill_mask", model="Urdu_Roberta/", tokenizer="Urdu_Roberta/")
+fill_mask = pipeline("fill-mask", model="Urdu_Roberta/", tokenizer="Urdu_Roberta/")
 
 results = fill_mask(args.text)
 
