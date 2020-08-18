@@ -13,7 +13,7 @@ tokenizer = RobertaTokenizer.from_pretrained("tf-roberta-urdu-small")
 model = TFRobertaForSequenceClassification.from_pretrained("tf-roberta-urdu-small", num_labels=2)
 
 model.compile(optimizer=tf.keras.optimizers.Adam(lr=0.0001), loss=tf.keras.losses.binary_crossentropy(),
-              metrics=tf.keras.metrics.Accuracy())
+              metrics=tf.keras.metrics.binary_crossentropy())
 
 
 input_ids = []
