@@ -3,7 +3,6 @@
 from transformers import pipeline
 import argparse
 
-
 parser = argparse.ArgumentParser(description="Test on MLM task")
 
 parser.add_argument('-t', '--text', type=str, required=True)
@@ -16,3 +15,5 @@ results = fill_mask(args.text)
 
 for result in results:
     print(result)
+
+from urduhack.datasets.text import ImdbUrduReviews

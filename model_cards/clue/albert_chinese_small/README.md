@@ -1,35 +1,27 @@
 ---
-language: zh
+language: ur
 ---
 
-## albert_chinese_small
+## roberta_urdu_small
 
 ### Overview
 
-**Language model:** albert-small
-**Model size:** 18.5M
-**Language:** Chinese
-**Training data:** [CLUECorpusSmall](https://github.com/CLUEbenchmark/CLUECorpus2020)
-**Eval data:** [CLUE dataset](https://github.com/CLUEbenchmark/CLUE)
+**Language model:** roberta_small-small
+**Model size:** 125M
+**Language:** Urdu
+**Training data:** News data from urdu news resources in Pakistan
 
-### Results
-
-For results on downstream tasks like text classification, please refer to [this repository](https://github.com/CLUEbenchmark/CLUE).
 
 ### Usage
 
-**NOTE:**Since sentencepiece is not used in `albert_chinese_small` model, you have to call **BertTokenizer** instead of AlbertTokenizer !!!
 
 ```
-import torch
-from transformers import BertTokenizer, AlbertModel
-tokenizer = BertTokenizer.from_pretrained("clue/albert_chinese_small")
-albert = AlbertModel.from_pretrained("clue/albert_chinese_small")
+from transformers import pipeline
+fill_mask = pipeline("urduhack/roberta_urdu_small")
 ```
 
-### About CLUE benchmark
+### About Urduhack
 
-Organization of Language Understanding Evaluation benchmark for Chinese: tasks & datasets, baselines, pre-trained Chinese models, corpus and leaderboard.
+Urduhack is a Natural Language Processing (NLP) library for urdu language.
 
-Github: https://github.com/CLUEbenchmark
-Website: https://www.cluebenchmarks.com/
+Github: https://github.com/urduhack/
