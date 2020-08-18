@@ -21,19 +21,20 @@ input_ids = []
 attention_masks = []
 
 for text in df_train["review"].values:
-    encoded = tokenizer.encode_plus(text, max_length=512, padding="max_length")
+    encoded = tokenizer.encode_plus(text)
     input_ids.append(encoded["input_ids"])
     attention_masks.append(encoded["attention_mask"])
 
 label_to_int = {"positive": 1, "negative": 0}
 train_labels = [label_to_int[label] for label in df_train["sentiment"].values]
 train_labels = tf.keras.utils.to_categorical(train_labels)
-print(train_labels)
 
-input_ids = np.asarray(input_ids)
-attention_masks = np.asarray(attention_masks)
+input_ids = tf.keras.preprocessing.sequence.pad_sequences(input_ids, maxlen=256, padding="post", value=1)
+attention_masks = tf.keras.preprocessing.sequence.pad_sequences(attention_masks, padding="post", value=0)
 
 print(input_ids.shape, attention_masks.shape)
+
+
 
 
 
