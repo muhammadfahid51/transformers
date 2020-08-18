@@ -1,6 +1,5 @@
 """Train sentiment model"""
 
-import numpy as np
 import pandas as pd
 import tensorflow as tf
 
@@ -11,10 +10,10 @@ df_test = pd.read_csv("imdb_urdu_reviews_test.csv")
 
 
 tokenizer = RobertaTokenizer.from_pretrained("tf-roberta-urdu-small")
-# model = TFRobertaForSequenceClassification.from_pretrained("tf-roberta-urdu-small", num_labels=2)
+model = TFRobertaForSequenceClassification.from_pretrained("tf-roberta-urdu-small", num_labels=2)
 
-# model.compile(optimizer=tf.keras.optimizers.Adam(lr=0.0001), loss=tf.keras.losses.binary_crossentropy(),
-#               metrics=tf.keras.metrics.Accuracy())
+model.compile(optimizer=tf.keras.optimizers.Adam(lr=0.0001), loss=tf.keras.losses.binary_crossentropy(),
+              metrics=tf.keras.metrics.Accuracy())
 
 
 input_ids = []
@@ -30,10 +29,10 @@ train_labels = [label_to_int[label] for label in df_train["sentiment"].values]
 train_labels = tf.keras.utils.to_categorical(train_labels)
 
 input_ids = tf.keras.preprocessing.sequence.pad_sequences(input_ids, maxlen=256, padding="post", value=1)
-attention_masks = tf.keras.preprocessing.sequence.pad_sequences(attention_masks, padding="post", value=0)
+attention_masks = tf.keras.preprocessing.sequence.pad_sequences(attention_masks, maxlen=256, padding="post", value=0)
 
-print(input_ids.shape, attention_masks.shape)
 
+model.fit(x=[input_ids, attention_masks], y=train_labels, epochs=5, batch_size=16)
 
 
 
