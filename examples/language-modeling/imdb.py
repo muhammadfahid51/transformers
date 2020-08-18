@@ -30,8 +30,8 @@ train_labels = [label_to_int[label] for label in df_train["sentiment"].values]
 train_labels = tf.keras.utils.to_categorical(train_labels)
 print(train_labels)
 
-input_ids = np.array(input_ids)
-attention_masks = np.array(attention_masks)
+input_ids = np.asarray(input_ids)
+attention_masks = np.asarray(attention_masks)
 
 print(input_ids.shape, attention_masks.shape)
 
