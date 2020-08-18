@@ -40,8 +40,12 @@ test_labels = tf.keras.utils.to_categorical(test_labels)
 train_input_ids = tf.keras.preprocessing.sequence.pad_sequences(train_input_ids, maxlen=256, padding="post", value=1)
 train_attention_masks = tf.keras.preprocessing.sequence.pad_sequences(train_attention_masks, maxlen=256, padding="post", value=0)
 
+test_input_ids = tf.keras.preprocessing.sequence.pad_sequences(test_input_ids, maxlen=256, padding="post", value=1)
+test_attention_masks = tf.keras.preprocessing.sequence.pad_sequences(test_attention_masks, maxlen=256, padding="post", value=0)
 
-model.fit(x=[train_input_ids, train_attention_masks], y=train_labels, epochs=5, batch_size=16,
+print(train_input_ids.shape, train_attention_masks.shape, test_input_ids.shape, test_attention_masks.shape)
+
+model.fit(x=[train_input_ids, train_attention_masks], y=train_labels, epochs=5, batch_size=32,
           validation_data=([test_input_ids, test_attention_masks], test_labels))
 
 model.save("tf-sentiment-model.h5")
