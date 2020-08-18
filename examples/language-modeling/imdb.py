@@ -21,7 +21,7 @@ input_ids = []
 attention_masks = []
 
 for text in df_train["review"].values:
-    encoded = tokenizer.encode_plus(text)
+    encoded = tokenizer.encode_plus(text, max_length=512, padding="max_length")
     input_ids.append(encoded["input_ids"])
     attention_masks.append(encoded["attention_mask"])
 
